@@ -1,8 +1,26 @@
 require 'sinatra'
 require 'pg'
-require 'ap'
-
 require 'sinatra/reloader' if development?
+require 'active_record'
+
+ActiveRecord::Base.logger = Logger.new(STDOUT)
+ActiveRecord::Base.establish_connection(
+  adapter: "postgresql",
+  database: "tiy-database"
+)
+
+class Employee < ActiveRecord::Base
+  validates :name, presence: true
+  validates :position, inclusion: { in: %w{Instructor Student}, message: "%{value} must be Instructor or Student" }
+
+  self.primary_key = "id"
+end
+
+# This magic tells Sinatra to close the database connection
+# after each request
+after do
+  ActiveRecord::Base.connection.close
+end
 
 get '/' do
   erb :home
@@ -30,9 +48,7 @@ get '/create_employee' do
 end
 
 get '/employees' do
-  database = PG.connect(dbname:"tiy-database")
-
-  @employees = database.exec("select * from employees")
+  @employees = Employee.all
 
   erb :employees
 end
@@ -93,11 +109,9 @@ get '/updatepeep' do
   erb :employees
 end
 get '/search' do
-  database = PG.connect(dbname: "tiy-database")
-
   search = params["search"]
 
-  @employees = database.exec("select * from employees where name like $1 or github=$2 or slack=$3", ["%#{search}%", search, search])
+  @employees = Employee.where("name like ? or github = ? or slack = ?", "%#{search}%", search, search)
 
   erb :search
 end

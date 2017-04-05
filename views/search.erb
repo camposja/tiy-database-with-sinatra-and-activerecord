@@ -58,14 +58,14 @@
              <% @employees.each do |employee| %>
             <tr>
               <td><%= employee["id"] %></td>
-              <td><a href=""/displaypeep?id=<%= employee["id"] %>""><%= employee["name"] %></a></td>
-              <td><%= employee["phone"] %></td>
-              <td><%= employee["address"]%></td>
-              <td><%= employee["position"]%></td>
-              <td><%= employee["salary"] %></td>
-              <td><%= employee["slack"]%></td>
-              <td><%= employee["github"]%></td>
-              <td><a class="btn btn-warning btn-sm" href="/editpeep?id=<%= employee["id"] %>" role="button">Edit</a></td>
+              <td><a href=""/displaypeep?id=<%= employee.id %>""><%= employee["name"] %></a></td>
+              <td><%= employee.phone %></td>
+              <td><%= employee.address%></td>
+              <td><%= employee.position%></td>
+              <td><%= employee.salary %></td>
+              <td><%= employee.slack%></td>
+              <td><%= employee.github%></td>
+              <td><a class="btn btn-warning btn-sm" href="/editpeep?id=<%= employee.id %>" role="button">Edit</a></td>
             </tr>
             <% end %>
           </tbody>

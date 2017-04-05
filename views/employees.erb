@@ -54,15 +54,15 @@
             </tr>
 
               <% @employees.each do |employee| %>
-                <% employee["id"] %>
+                <% employee.id %>
                 <tr>
-                  <td><a href="/displaypeep?id=<%= employee["id"] %>"><%= employee["name"] %></a></td>
-                  <td><%= employee["phone"] %></td>
-                  <td><%= employee["address"]%></td>
-                  <td><%= employee["position"]%></td>
-                  <td><%= employee["salary"] %></td>
-                  <td><%= employee["slack"]%></td>
-                  <td><%= employee["github"]%></td>
+                  <td><a href="/displaypeep?id=<%= employee.id %>"><%= employee.name %></a></td>
+                  <td><%= employee.phone %></td>
+                  <td><%= employee.address%></td>
+                  <td><%= employee.position%></td>
+                  <td><%= employee.salary %></td>
+                  <td><%= employee.slack%></td>
+                  <td><%= employee.github%></td>
                   <td><a class="btn btn-danger btn-sm" href="/delete?id=<%= employee["id"] %>" role="button">Delete</a></td>
                 </tr>
               <% end %>
