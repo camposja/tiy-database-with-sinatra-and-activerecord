@@ -25,23 +25,17 @@ get '/' do
 end
 
 get '/addpeep' do
+  @employee = Employee.new
+
   erb :addpeep
 end
-
 get '/create_employee' do
-  database = PG.connect(dbname:"tiy-database")
-
-  name     = params["name"]
-  phone    = params["phone"]
-  address  = params["address"]
-  position = params["position"]
-  salary   = params["salary"]
-  github   = params["github"]
-  slack    = params["slack"]
-
-  database.exec("insert into employees (name, phone, address, position, salary, github, slack) values($1, $2, $3, $4, $5, $6, $7)", [name, phone, address, position, salary, github, slack])
-
-  redirect('/')
+  @employee = Employee.create(params)
+  if @employee.valid?
+    redirect('/')
+  else
+    erb :employees_new
+  end
 end
 
 get '/employees' do
@@ -58,9 +52,8 @@ get '/displaypeep' do
   employees = database.exec("select * from employees where id =$1", [id])
 
   @employee = employees.first
-  # if
+
   erb :displaypeep
-  # end
 end
 
 get '/delete' do
@@ -88,22 +81,15 @@ end
 get '/updatepeep' do
   database = PG.connect(dbname: "tiy-database")
 
-  id       = params["id"]
-  name     = params["name"]
-  phone    = params["phone"]
-  address  = params["address"]
-  position = params["position"]
-  salary   = params["salary"]
-  github   = params["github"]
-  slack    = params["slack"]
+  @employee = Employee.find(params["id"])
 
-  database.exec("UPDATE employees SET name = $1, phone = $2, address = $3, position = $4, salary = $5, github = $6, slack =$7 WHERE id = $8;", [name, phone, address, position, salary, github, slack, id])
+ @employee.update_attributes(params)
 
-  employees = database.exec("select * from employees where id = $1", [id])
-
-  @employee = employees.first
-
-  erb :employees
+ if @employee.valid?
+   redirect to("/displaypeep?id=#{@employee.id}")
+ else
+   erb :employees
+ end
 end
 get '/search' do
   search = params["search"]
