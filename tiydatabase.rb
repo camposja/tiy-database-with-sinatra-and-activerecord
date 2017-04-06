@@ -16,8 +16,6 @@ class Employee < ActiveRecord::Base
   self.primary_key = "id"
 end
 
-# This magic tells Sinatra to close the database connection
-# after each request
 after do
   ActiveRecord::Base.connection.close
 end
@@ -33,7 +31,6 @@ end
 get '/create_employee' do
   database = PG.connect(dbname:"tiy-database")
 
-  # insert info databse
   name     = params["name"]
   phone    = params["phone"]
   address  = params["address"]
@@ -69,9 +66,9 @@ end
 get '/delete' do
   database = PG.connect(dbname: "tiy-database")
 
-  id = params["id"]
+  @employee = Employee.find(params["id"])
 
-  database.exec("DELETE FROM  employees where id = $1", [id])
+  @employee.destroy
 
   redirect('/employees')
 end
