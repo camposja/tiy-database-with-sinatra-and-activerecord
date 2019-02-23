@@ -1,7 +1,9 @@
 require 'sinatra'
 require 'pg'
-require 'sinatra/reloader' if development?
 require 'active_record'
+
+# TODO: sinatra reloader not required after sinatra update
+# require 'sinatra/reloader' if development?
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection(
